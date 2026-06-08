@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9+7;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+        vector<long long> a(n);
+        for (int i = 0; i < n; i++) cin >> a[i];
+        bool ok = true;
+        for (int i = 0; i < n; i++) {
+            bool possible = false;
+            for (long long d = 1; d * d <= a[i]; d++) {
+                if (a[i] % d == 0) {
+                    long long e = a[i] / d;
+                    if (d <= n && e <= n) {
+                        possible = true;
+                        break;
+                    }
+                }
+            }
+            if (!possible) {
+                ok = false;
+                break;
+            }
+        }
+
+        if (!ok) {
+            cout << 0 << "\n";
+            continue;
+        }
+
+        // Step 2: count multiplicities
+        unordered_map<long long,int> freq;
+        for (auto x : a) freq[x]++;
+
+        long long ans = 1;
+        for (auto &kv : freq) {
+            int cnt = kv.second;
+            long long f = 1;
+            for (int i = 1; i <= cnt; i++) f = (f * i) % MOD;
+            ans = (ans * f) % MOD;
+        }
+
+        cout << ans << "\n";
+    }
+    return 0;
+}
